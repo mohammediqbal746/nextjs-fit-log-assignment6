@@ -2,11 +2,11 @@
 
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { Workout } from '@/types/workout';
 import { usePlan } from '@/context/PlanContext';
-import { ArrowLeft, Clock, Flame, Star, CheckCircle, Bookmark } from 'lucide-react';
+import { CalendarPlus, Bookmark } from 'lucide-react';
+import Link from 'next/link';
 
 export default function WorkoutDetails() {
   const params = useParams();
@@ -15,7 +15,6 @@ export default function WorkoutDetails() {
   const [workout, setWorkout] = useState<Workout | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Context থেকে ফাংশনগুলো নিয়ে আসা
   const { addToTodayPlan, saveForLater, todayPlan, savedWorkouts } = usePlan();
 
   useEffect(() => {
@@ -24,7 +23,6 @@ export default function WorkoutDetails() {
         const res = await fetch(`https://api.abcz.workers.dev/api/fitlog/${id}`);
         const data = await res.json();
         
-        // API রেসপন্স হ্যান্ডেল করা
         if (data && data.id) {
           setWorkout(data);
         } else if (data && data.data) {
@@ -57,130 +55,127 @@ export default function WorkoutDetails() {
     );
   }
 
-  // চেক করা যে এই ওয়ার্কআউটটি অলরেডি প্ল্যান বা সেভড লিস্টে আছে কি না
   const isAddedToPlan = todayPlan.some((item) => item.id === workout.id);
   const isSaved = savedWorkouts.some((item) => item.id === workout.id);
 
-  const tags = Array.isArray(workout.categories) ? workout.categories : workout.category ? [workout.category] : ['FULL BODY'];
+  const tags = Array.isArray(workout.categories) ? workout.categories : workout.category ? [workout.category] : ['Chest', 'Arms'];
 
   return (
-    <main className="min-h-screen pb-20">
-      {/* Header Image Section */}
-      <div className="relative w-full h-[40vh] md:h-[50vh] bg-neutral-900">
-        {workout.image && (
-          <Image
-            src={workout.image}
-            alt={workout.name}
-            fill
-            className="object-cover opacity-60"
-            priority
-          />
-        )}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#0f1012] to-transparent" />
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         
-        <div className="absolute bottom-0 w-full">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
-            <Link href="/" className="inline-flex items-center gap-2 text-[#ccff00] font-bold text-sm mb-6 hover:underline uppercase tracking-wider">
-              <ArrowLeft className="w-4 h-4" /> Back to Library
-            </Link>
-            
-            <div className="flex flex-wrap gap-2 mb-4">
-              {tags.map((tag, idx) => (
-                <span key={idx} className="bg-[#ccff00] text-black text-[10px] font-black px-3 py-1 rounded-full uppercase tracking-widest">
-                  {tag}
-                </span>
-              ))}
-            </div>
-            
-            <h1 className="text-4xl md:text-6xl font-black text-white uppercase tracking-tight">
-              {workout.name}
-            </h1>
-          </div>
+        {/* বাম কলাম: ছবি */}
+        <div className="lg:col-span-5 relative w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] bg-neutral-900 rounded-3xl overflow-hidden border border-neutral-800/50">
+          {workout.image && (
+            <Image
+              src={workout.image}
+              alt={workout.name}
+              fill
+              className="object-cover"
+              priority
+            />
+          )}
         </div>
-      </div>
 
-      {/* Content Section */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 pt-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        {/* ডান কলাম: কনটেন্ট */}
+        <div className="lg:col-span-7 flex flex-col pt-2">
           
-          {/* Left Column: Details & Instructions */}
-          <div className="md:col-span-2 space-y-10">
-            {/* Stats */}
-            <div className="flex flex-wrap items-center gap-6 py-6 border-y border-neutral-800">
-              <div className="flex items-center gap-2 text-neutral-300">
-                <Clock className="w-5 h-5 text-neutral-500" />
-                <span className="font-medium">{workout.duration || 10} min</span>
-              </div>
-              <div className="flex items-center gap-2 text-neutral-300">
-                <Flame className="w-5 h-5 text-neutral-500" />
-                <span className="font-medium">{workout.calories || 150} kcal</span>
-              </div>
-              <div className="flex items-center gap-2 text-neutral-300">
-                <Star className="w-5 h-5 text-[#ccff00]" />
-                <span className="font-medium">{workout.rating || 4.5}</span>
-              </div>
-            </div>
+          <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4">
+            {workout.name}
+          </h1>
+          
+          <p className="text-neutral-400 text-sm md:text-base leading-relaxed mb-6">
+            {workout.description || 'A compound press that builds chest thickness, triceps, and pressing power from a stable bench.'}
+          </p>
 
-            {/* Description */}
-            <section>
-              <h2 className="text-xl font-bold text-white uppercase mb-4">Overview</h2>
-              <p className="text-neutral-400 leading-relaxed">
-                {workout.description || 'Focus on maintaining proper form throughout the movement. Keep your core tight and control the weight during both the concentric and eccentric phases.'}
-              </p>
-            </section>
-
-            {/* Instructions */}
-            <section>
-              <h2 className="text-xl font-bold text-white uppercase mb-4">Instructions</h2>
-              {workout.instructions && Array.isArray(workout.instructions) ? (
-                <ul className="space-y-4">
-                  {workout.instructions.map((step, idx) => (
-                    <li key={idx} className="flex gap-4 text-neutral-400 leading-relaxed">
-                      <span className="text-[#ccff00] font-black text-lg">{idx + 1}.</span>
-                      <span>{step}</span>
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="text-neutral-400">Step-by-step instructions are not available for this workout.</p>
-              )}
-            </section>
+          <div className="flex flex-wrap gap-2 mb-8">
+            {tags.map((tag, idx) => (
+              <span key={idx} className="bg-[#ccff00] text-black text-xs font-black px-3 py-1.5 rounded-full uppercase tracking-wider">
+                {tag}
+              </span>
+            ))}
           </div>
 
-          {/* Right Column: Actions */}
-          <div className="space-y-4">
-            <div className="bg-[#1c1e22] border border-neutral-800 rounded-2xl p-6 sticky top-24">
-              <div className="mb-6">
-                <h3 className="text-sm text-neutral-500 font-bold uppercase tracking-wider mb-1">Equipment</h3>
-                <p className="text-white font-medium">{workout.equipment || 'Bodyweight'}</p>
-              </div>
-
-              <button
-                onClick={() => addToTodayPlan(workout)}
-                disabled={isAddedToPlan}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-wide transition-all mb-3 ${
-                  isAddedToPlan 
-                    ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' 
-                    : 'bg-[#ccff00] text-black hover:brightness-105'
-                }`}
-              >
-                <CheckCircle className="w-5 h-5" />
-                {isAddedToPlan ? 'Added to Plan' : "Add to Today's Plan"}
-              </button>
-
-              <button
-                onClick={() => saveForLater(workout)}
-                disabled={isSaved}
-                className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-xl font-bold uppercase tracking-wide transition-all border ${
-                  isSaved 
-                    ? 'border-neutral-800 text-neutral-600 cursor-not-allowed bg-transparent' 
-                    : 'border-neutral-700 text-white hover:border-neutral-500 bg-transparent'
-                }`}
-              >
-                <Bookmark className="w-5 h-5" />
-                {isSaved ? 'Saved' : 'Save for Later'}
-              </button>
+          {/* স্পেকস টেবিল (Figma অনুযায়ী) */}
+          <div className="bg-[#131417] border border-neutral-800/50 rounded-2xl p-6 mb-8 space-y-4">
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Equipment</span>
+              <span className="text-neutral-300">{workout.equipment || 'Barbell, Bench'}</span>
             </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Difficulty</span>
+              <span className="text-neutral-300">{workout.difficulty || 'Intermediate'}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Sets</span>
+              <span className="text-neutral-300">{workout.sets || 4}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Reps</span>
+              <span className="text-neutral-300">{workout.reps || '6-8'}</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Duration</span>
+              <span className="text-neutral-300">{workout.duration || 25} min</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Calories</span>
+              <span className="text-neutral-300">{workout.calories || 180} kcal</span>
+            </div>
+            <div className="flex justify-between items-center text-sm">
+              <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Rating</span>
+              <span className="text-neutral-300">{workout.rating || 4.8}</span>
+            </div>
+          </div>
+
+          {/* ইনস্ট্রাকশনস */}
+          <div className="mb-10">
+            <h2 className="text-white font-bold uppercase tracking-wide mb-4">Instructions</h2>
+            <div className="space-y-3">
+              {workout.instructions && Array.isArray(workout.instructions) ? (
+                workout.instructions.map((step, idx) => (
+                  <p key={idx} className="text-neutral-400 text-sm leading-relaxed">
+                    <span className="text-neutral-500 mr-2">{idx + 1}.</span> {step}
+                  </p>
+                ))
+              ) : (
+                <>
+                  <p className="text-neutral-400 text-sm leading-relaxed"><span className="text-neutral-500 mr-2">1.</span> Lie on the bench with eyes under the bar and feet planted.</p>
+                  <p className="text-neutral-400 text-sm leading-relaxed"><span className="text-neutral-500 mr-2">2.</span> Unrack with locked elbows and lower the bar to mid-chest.</p>
+                  <p className="text-neutral-400 text-sm leading-relaxed"><span className="text-neutral-500 mr-2">3.</span> Press up in a slight arc until elbows lock without bouncing.</p>
+                  <p className="text-neutral-400 text-sm leading-relaxed"><span className="text-neutral-500 mr-2">4.</span> Keep shoulder blades pinched and a natural arch in the back.</p>
+                </>
+              )}
+            </div>
+          </div>
+
+          {/* বাটনস */}
+          <div className="flex flex-wrap items-center gap-4 mt-auto">
+            <button
+              onClick={() => addToTodayPlan(workout)}
+              disabled={isAddedToPlan}
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg font-bold text-sm transition-all ${
+                isAddedToPlan 
+                  ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' 
+                  : 'bg-[#ccff00] text-black hover:brightness-105'
+              }`}
+            >
+              <CalendarPlus className="w-4 h-4" />
+              {isAddedToPlan ? 'Added to plan' : "Add to today's plan"}
+            </button>
+
+            <button
+              onClick={() => saveForLater(workout)}
+              disabled={isSaved}
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg font-bold text-sm transition-all border ${
+                isSaved 
+                  ? 'border-neutral-800 text-neutral-600 cursor-not-allowed' 
+                  : 'border-neutral-700 text-neutral-300 hover:border-neutral-500 hover:text-white'
+              }`}
+            >
+              <Bookmark className="w-4 h-4" />
+              {isSaved ? 'Saved' : 'Save for later'}
+            </button>
           </div>
 
         </div>
