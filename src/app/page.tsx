@@ -18,7 +18,6 @@ export default function Home() {
         const res = await fetch('https://api.abcz.workers.dev/api/fitlog');
         const data = await res.json();
         
-        // API রেসপন্স Array নাকি Object চেক করা
         if (Array.isArray(data)) {
           setWorkouts(data);
         } else if (data && Array.isArray(data.data)) {
@@ -96,7 +95,7 @@ export default function Home() {
             <p className="text-neutral-400 font-medium">Fetching workouts from API...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {sortedWorkouts?.map((workout) => (
               <WorkoutCard key={workout.id} workout={workout} />
             ))}

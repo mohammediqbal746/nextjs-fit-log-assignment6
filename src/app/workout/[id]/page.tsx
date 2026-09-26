@@ -64,22 +64,13 @@ export default function WorkoutDetails() {
     <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 md:py-16">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-start">
         
-        {/* বাম কলাম: ছবি */}
         <div className="lg:col-span-5 relative w-full aspect-[4/5] md:aspect-square lg:aspect-[4/5] bg-neutral-900 rounded-3xl overflow-hidden border border-neutral-800/50">
           {workout.image && (
-            <Image
-              src={workout.image}
-              alt={workout.name}
-              fill
-              className="object-cover"
-              priority
-            />
+            <Image src={workout.image} alt={workout.name} fill className="object-cover" priority />
           )}
         </div>
 
-        {/* ডান কলাম: কনটেন্ট */}
         <div className="lg:col-span-7 flex flex-col pt-2">
-          
           <h1 className="text-3xl md:text-4xl font-black text-white uppercase tracking-tight mb-4">
             {workout.name}
           </h1>
@@ -96,7 +87,6 @@ export default function WorkoutDetails() {
             ))}
           </div>
 
-          {/* স্পেকস টেবিল (Figma অনুযায়ী) */}
           <div className="bg-[#131417] border border-neutral-800/50 rounded-2xl p-6 mb-8 space-y-4">
             <div className="flex justify-between items-center text-sm">
               <span className="text-neutral-500 font-bold uppercase tracking-wider text-xs">Equipment</span>
@@ -128,7 +118,6 @@ export default function WorkoutDetails() {
             </div>
           </div>
 
-          {/* ইনস্ট্রাকশনস */}
           <div className="mb-10">
             <h2 className="text-white font-bold uppercase tracking-wide mb-4">Instructions</h2>
             <div className="space-y-3">
@@ -149,15 +138,12 @@ export default function WorkoutDetails() {
             </div>
           </div>
 
-          {/* বাটনস */}
           <div className="flex flex-wrap items-center gap-4 mt-auto">
             <button
               onClick={() => addToTodayPlan(workout)}
               disabled={isAddedToPlan}
               className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg font-bold text-sm transition-all ${
-                isAddedToPlan 
-                  ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' 
-                  : 'bg-[#ccff00] text-black hover:brightness-105'
+                isAddedToPlan ? 'bg-neutral-800 text-neutral-500 cursor-not-allowed' : 'bg-[#ccff00] text-black hover:brightness-105'
               }`}
             >
               <CalendarPlus className="w-4 h-4" />
@@ -168,9 +154,7 @@ export default function WorkoutDetails() {
               onClick={() => saveForLater(workout)}
               disabled={isSaved}
               className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-3.5 rounded-lg font-bold text-sm transition-all border ${
-                isSaved 
-                  ? 'border-neutral-800 text-neutral-600 cursor-not-allowed' 
-                  : 'border-neutral-700 text-neutral-300 hover:border-neutral-500 hover:text-white'
+                isSaved ? 'border-neutral-800 text-neutral-600 cursor-not-allowed' : 'border-neutral-700 text-neutral-300 hover:border-neutral-500 hover:text-white'
               }`}
             >
               <Bookmark className="w-4 h-4" />
