@@ -20,7 +20,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
   const [todayPlan, setTodayPlan] = useState<PlanItem[]>([]);
   const [savedWorkouts, setSavedWorkouts] = useState<Workout[]>([]);
 
-  // ব্রাউজার লোড হলে LocalStorage থেকে পুরনো ডেটা নিয়ে আসা
   useEffect(() => {
     const savedPlan = localStorage.getItem('fitlog_today_plan');
     const savedLater = localStorage.getItem('fitlog_saved');
@@ -33,9 +32,7 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     }
   }, []);
 
-  // Today's Plan-এ ওয়ার্কআউট যোগ করা
   const addToTodayPlan = (workout: Workout) => {
-    // লিমিট ৫টি ওয়ার্কআউট চেক করা
     if (todayPlan.length >= 5) {
       toast.error("Cap reached! You can only add up to 5 lifts for today.");
       return;
@@ -53,7 +50,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success("Added to today's plan!");
   };
 
-  // Save for later-এ যোগ করা
   const saveForLater = (workout: Workout) => {
     const alreadySaved = savedWorkouts.some((item) => item.id === workout.id);
     if (alreadySaved) {
@@ -67,7 +63,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success('Saved for later!');
   };
 
-  // Today's Plan থেকে ডিলিট করা
   const removeFromTodayPlan = (id: string | number) => {
     const updatedPlan = todayPlan.filter((item) => item.id !== id);
     setTodayPlan(updatedPlan);
@@ -75,7 +70,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success('Removed from today’s plan');
   };
 
-  // Saved থেকে ডিলিট করা
   const removeFromSaved = (id: string | number) => {
     const updatedSaved = savedWorkouts.filter((item) => item.id !== id);
     setSavedWorkouts(updatedSaved);
@@ -83,7 +77,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
     toast.success('Removed from saved list');
   };
 
-  // ওয়ার্কআউট শেষ হলে Mark as Done টগল করা
   const markAsDone = (id: string | number) => {
     const updatedPlan = todayPlan.map((item) => {
       if (item.id === id) {
@@ -114,7 +107,6 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// কাস্টম হুক
 export const usePlan = () => {
   const context = useContext(PlanContext);
   if (!context) {

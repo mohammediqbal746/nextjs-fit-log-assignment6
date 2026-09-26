@@ -5,15 +5,13 @@ import { Workout } from '@/types/workout';
 import { Clock, Flame, Star } from 'lucide-react';
 
 export const WorkoutCard = ({ workout }: { workout: Workout }) => {
-  // ক্যাটাগরি ট্যাগের জন্য ফলব্যাক (API-তে যা থাকবে সেটাই দেখাবে)
   const tags = Array.isArray(workout.categories) 
     ? workout.categories 
     : workout.category 
       ? [workout.category] 
-      : ['FULL BODY']; // ডেটা না থাকলে ডিফল্ট
+      : ['FULL BODY'];
 
-  // ক্যালরি ডেটার ফলব্যাক
-  const calories = workout.calories || 150; // API তে না থাকলে 150 দেখাবে
+  const calories = workout.calories || 150;
 
   return (
     <Link 
@@ -33,7 +31,6 @@ export const WorkoutCard = ({ workout }: { workout: Workout }) => {
       </div>
       
       <div className="p-5">
-        {/* Category Tags */}
         <div className="flex flex-wrap gap-2 mb-3">
           {tags.map((tag, idx) => (
             <span 

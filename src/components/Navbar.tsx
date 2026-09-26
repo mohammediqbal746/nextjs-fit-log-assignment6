@@ -14,7 +14,6 @@ export const Navbar = () => {
     <header className="sticky top-0 z-50 w-full border-b border-neutral-800 bg-[#0f1012]/90 backdrop-blur-md">
       <div className="max-w-7xl mx-auto flex h-16 items-center justify-between px-4 sm:px-6 lg:px-8">
         
-        {/* বামে: Logo */}
         <Link href="/" className="flex items-center gap-2 text-white font-black tracking-wider text-xl">
           <div className="bg-[#ccff00] text-black p-1.5 rounded-md flex items-center justify-center">
             <Dumbbell className="w-5 h-5" />
@@ -22,7 +21,6 @@ export const Navbar = () => {
           <span>FITLOG</span>
         </Link>
 
-        {/* মাঝে: Navigation Links */}
         <nav className="flex items-center gap-2">
           <Link
             href="/"
@@ -46,7 +44,6 @@ export const Navbar = () => {
           </Link>
         </nav>
 
-        {/* ডানে: Badge Counters */}
         <div className="flex items-center gap-2 sm:gap-3">
           <Link
             href="/my-plan"
