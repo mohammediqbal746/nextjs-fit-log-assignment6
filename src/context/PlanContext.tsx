@@ -21,15 +21,21 @@ export const PlanProvider = ({ children }: { children: React.ReactNode }) => {
   const [savedWorkouts, setSavedWorkouts] = useState<Workout[]>([]);
 
   useEffect(() => {
-    const savedPlan = localStorage.getItem('fitlog_today_plan');
-    const savedLater = localStorage.getItem('fitlog_saved');
+    // setTimeout ব্যবহার করে আমরা state update-কে asynchronous করে দিচ্ছি,
+    // যাতে React-এর cascading render warning টি আর না আসে।
+    const timer = setTimeout(() => {
+      const savedPlan = localStorage.getItem('fitlog_today_plan');
+      const savedLater = localStorage.getItem('fitlog_saved');
 
-    if (savedPlan) {
-      setTodayPlan(JSON.parse(savedPlan));
-    }
-    if (savedLater) {
-      setSavedWorkouts(JSON.parse(savedLater));
-    }
+      if (savedPlan) {
+        setTodayPlan(JSON.parse(savedPlan));
+      }
+      if (savedLater) {
+        setSavedWorkouts(JSON.parse(savedLater));
+      }
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, []);
 
   const addToTodayPlan = (workout: Workout) => {
